@@ -1,0 +1,66 @@
+services:
+  app:
+    build: .
+    image: test_app:latest
+    container_name: test_app
+    command: uvicorn index:app --host 0.0.0.0 --port 8002 --reload
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env
+    volumes:
+      - .:/test_app
+    depends_on:
+      test_db:
+        condition: service_healthy
+    restart: always
+
+  migrate:
+    build: .
+    image: test_migrate:latest
+    container_name: test_migrate
+    command: alembic upgrade head
+    env_file:
+      - .env
+    depends_on:
+      test_db:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+
+  test_db:
+    image: postgres:16
+    container_name: test_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+    ports:
+      - "5433:5433"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+
+  worker:
+    build: .
+    image: test_worker:latest
+    container_name: test_worker
+    command: celery -A worker.celery_app worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - test_db
+    volumes:
+      - ./:/app
+
+volumes:
+  db_data:

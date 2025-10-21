@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+echo "setting up environment vars.."
+
+
+if [ ! -f .env ]; then
+    echo "creating .env with defaults"
+    cat <<EOF > .env
+DEBUG=True
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@test_db:5432/postgres
+JWT_SECRET=qACK2B8f0F-AshvJQWSXuLY28Vo7FKls4CmPyrDwhb4
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
+RESEND_API_KEY=
+EOF
+else
+    echo ".env already exists, skipping creation"
+fi
+echo "environment vars setup complete."
