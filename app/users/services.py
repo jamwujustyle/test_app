@@ -1,10 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException
 
 from .repository import UserRepo
 from .models import User, UserStatus
 
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 
 class UserService:
@@ -63,3 +64,26 @@ class UserService:
         await self.repo.update_verification_code(user)
 
         return user, code
+
+
+class AdminService(UserService):
+    async def fetch_all_users(self) -> Optional[List[User]]:
+        return await self.repo.fetch_all_users()
+
+    async def update_user(self, user_id: UUID, data: dict):
+        user = await self.repo.get_user_by_id(user_id)
+        if not user:
+            raise HTTPException(404, "user not found")
+
+        for key, value in data.items():
+            setattr(user, key, value)
+
+        await self.repo.db.commit()
+        await self.repo.db.refresh(user)
+        return user
+
+    async def delete_user(self, user_id):
+        user = await self.repo.get_user_by_id(user_id)
+        await self.repo.db.delete(user)
+        await self.repo.db.commit()
+        return

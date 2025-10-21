@@ -1,9 +1,16 @@
 from pydantic import BaseModel, Field, ConfigDict
 
-from typing import Optional
+from typing import Optional, List
+from uuid import UUID
+
+from app.core import UserRole, UserStatus
 
 
 class UserResponse(BaseModel):
+
+    id: UUID
+    # TODO: RM LATER
+
     email: str = Field(..., description="Unique email address of the user.")
     name: Optional[str] = Field(
         None, description="First name of the user, if provided."
@@ -20,3 +27,14 @@ class UserResponse(BaseModel):
     )
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserListResponse(BaseModel):
+    users: List[UserResponse]
+
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    status: Optional[UserStatus] = None
+    role: Optional[UserRole] = None

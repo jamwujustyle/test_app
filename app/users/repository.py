@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 from .models import User, UserStatus
 
@@ -52,3 +52,8 @@ class UserRepo:
     async def update_verification_code(self, user: User) -> User:
         await self.db.commit()
         await self.db.refresh(user)
+
+    async def fetch_all_users(self) -> Optional[List[User]]:
+        users = await self.db.execute(select(User))
+
+        return users.scalars().all()

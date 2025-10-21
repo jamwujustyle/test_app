@@ -17,3 +17,4 @@ migrate:
 
 test:
     docker exec -it test_app bash -c "pytest -v --disable-warnings"
+
