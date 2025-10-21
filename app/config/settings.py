@@ -13,6 +13,8 @@ class Settings(BaseSettings):
 
     FROM_EMAIL: str = "onboarding@resend.dev"
 
+    SITE_NAME: str = "hello world"
+
     @property
     def SECURE_COOKIES(self) -> bool:
         return not self.DEBUG

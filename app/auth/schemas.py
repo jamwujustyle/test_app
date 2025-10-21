@@ -22,3 +22,12 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     success: bool
     message: str
+
+
+class ResendCodeRequest(BaseModel):
+    email: EmailStr = Field(...)
+
+
+class VerifyRequest(BaseModel):
+    email: EmailStr = Field(...)
+    code: str = Field(..., min_length=6, max_length=6)

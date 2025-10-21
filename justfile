@@ -10,3 +10,7 @@ down:
 
 setup:
     chmod +x ./scripts/set-env && ./scripts/set-env
+
+
+migrate:
+    docker exec -it test_app bash -c "alembic revision --autogenerate -m 'auto' && alembic upgrade head"

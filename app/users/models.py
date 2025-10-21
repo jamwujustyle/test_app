@@ -8,6 +8,7 @@ from app.config.database import Base
 from app.core import UserStatus, UserRole
 
 from uuid import UUID, uuid4
+from datetime import datetime, timedelta
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -35,6 +36,25 @@ class User(Base):
         nullable=True,
         default=UserRole.USER,
     )
+    verification_code: Mapped[str] = mapped_column(String(6), nullable=True)
+    verification_code_expires: Mapped[datetime] = mapped_column(nullable=True)
+
+    def generate_verification_code(self) -> str:
+        import random
+
+        code = "".join([str(random.randint(0, 9)) for _ in range(6)])
+        self.verification_code = code
+        self.verification_code_expires = datetime.now() + timedelta(minutes=15)
+        return code
+
+    def verify_code(self, code: str) -> bool:
+        if not self.verification_code or not self.verification_code_expires:
+            return False
+
+        if datetime.now() > self.verification_code_expires:
+            return False
+
+        return self.verification_code == code
 
     def set_password(self, plain_password: str) -> None:
         self.password = pwd_context.hash(plain_password)

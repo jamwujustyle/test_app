@@ -4,7 +4,7 @@ from sqlalchemy import select
 from uuid import UUID
 from typing import Optional
 
-from .models import User
+from .models import User, UserStatus
 
 
 class UserRepo:
@@ -38,3 +38,17 @@ class UserRepo:
         if user and user.verify_password(password):
             return user
         return None
+
+    async def verify_user(self, user: User) -> User:
+        user.status = UserStatus.VERIFIED
+        user.verification_code = None
+        user.verification_code_expires = None
+
+        await self.db.commit()
+        await self.db.refresh(user)
+
+        return user
+
+    async def update_verification_code(self, user: User) -> User:
+        await self.db.commit()
+        await self.db.refresh(user)
