@@ -5,7 +5,7 @@ sqlalchemy>=2.0.43,<2.1.0
 # secodnary
 python-jose[cryptography]>=3.5.0,<4.0.0
 uvicorn[standard]>=0.37.0,<0.40.0
-pydantic[email]>=1.10.0,<2.0.0
+pydantic[email]>=2.11.9,<2.12.0
 pydantic-settings>=2.11.0,<2.12.0
 alembic>=1.16.5,<1.17.0
 # distributed
