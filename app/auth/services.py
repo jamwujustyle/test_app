@@ -43,7 +43,7 @@ async def refresh_access_token(
         )
 
     user_repo = UserRepo(db)
-    user = await user_repo.get_by_id(uuid.UUID(user_id_str))
+    user = await user_repo.get_user_by_id(uuid.UUID(user_id_str))
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

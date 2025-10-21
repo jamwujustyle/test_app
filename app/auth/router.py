@@ -17,7 +17,7 @@ from app.core import UserStatus
 from app.config import get_db, create_refresh_token, create_access_token
 
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/signup", response_model=RegisterResponse)
@@ -68,7 +68,7 @@ async def verify(
     return RegisterResponse(verified=True, message="Email verified successfully")
 
 
-@router.post("/login", response_model=RegisterResponse)
+@router.post("/login", response_model=LoginResponse)
 async def login(
     request: LoginRequest, response: Response, db: AsyncSession = Depends(get_db)
 ):
@@ -87,7 +87,7 @@ async def login(
         )
 
     tokens = {
-        "access_token": create_access_token(user.id),
+        "access_token": create_access_token(user_id=user.id, email=user.email),
         "refresh_token": create_refresh_token(user.id),
     }
     set_auth_cookies(response, tokens)

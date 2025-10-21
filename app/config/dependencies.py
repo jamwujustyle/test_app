@@ -49,7 +49,7 @@ async def get_current_user(
 
     user_repo = UserRepo(db)
 
-    user = await user_repo.get_by_id(user_id)
+    user = await user_repo.get_user_by_id(user_id)
 
     if user is None:
         raise HTTPException(

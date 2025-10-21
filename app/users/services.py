@@ -22,7 +22,7 @@ class UserService:
         return await self.repo.get_user_by_id(user_id)
 
     async def authenticate_user(self, email: str, password: str) -> User:
-        return self.repo.authenticate_user(email=email, password=password)
+        return await self.repo.authenticate_user(email=email, password=password)
 
     async def create_user_with_verification(
         self, email: str, password: str, name: str = None, surname: str = None
