@@ -36,6 +36,7 @@ class User(Base):
         nullable=True,
         default=UserRole.USER,
     )
+    # NOTE: I would've had these fields in a separate table in a larger application
     verification_code: Mapped[str] = mapped_column(String(6), nullable=True)
     verification_code_expires: Mapped[datetime] = mapped_column(nullable=True)
 

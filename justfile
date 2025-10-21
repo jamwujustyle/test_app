@@ -14,3 +14,6 @@ setup:
 
 migrate:
     docker exec -it test_app bash -c "alembic revision --autogenerate -m 'auto' && alembic upgrade head"
+
+test:
+    docker exec -it test_app bash -c "pytest -v --disable-warnings"

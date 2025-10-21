@@ -49,18 +49,33 @@ services:
     image: redis:7-alpine
     container_name: redis
 
-  # worker:
-  #   build: .
-  #   image: test_worker:latest
-  #   container_name: test_worker
-  #   command: celery -A app.celery worker --loglevel=info
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - redis
-  #     - test_db
-  #   volumes:
-  #     - ./:/app
+  worker:
+    build: .
+    image: test_worker:latest
+    container_name: test_worker
+    command: celery -A app.celery worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - test_db
+    volumes:
+      - .:/test_app
+    restart: always
+
+  beat:
+    build: .
+    image: test_beat:latest
+    container_name: test_beat
+    command: celery -A app.celery beat --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - test_db
+    volumes:
+      - .:/test_app
+    restart: always
 
 volumes:
   db_data:
