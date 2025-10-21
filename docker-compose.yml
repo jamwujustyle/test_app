@@ -26,7 +26,7 @@ services:
       test_db:
         condition: service_healthy
     volumes:
-      - ./:/app
+      - ./:/test-task
 
   test_db:
     image: postgres:16
@@ -49,18 +49,18 @@ services:
     image: redis:7-alpine
     container_name: redis
 
-  worker:
-    build: .
-    image: test_worker:latest
-    container_name: test_worker
-    command: celery -A worker.celery worker --loglevel=info
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - test_db
-    volumes:
-      - ./:/app
+  # worker:
+  #   build: .
+  #   image: test_worker:latest
+  #   container_name: test_worker
+  #   command: celery -A app.celery worker --loglevel=info
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - redis
+  #     - test_db
+  #   volumes:
+  #     - ./:/app
 
 volumes:
   db_data:

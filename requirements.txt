@@ -1,6 +1,7 @@
 # core
 fastapi>=0.118.0,<0.130.0
 asyncpg>=0.30.0,<0.31.0
+psycopg2-binary>=2.9.9,<3.0.0
 sqlalchemy>=2.0.43,<2.1.0
 # secodnary
 python-jose[cryptography]>=3.5.0,<4.0.0
