@@ -2,10 +2,14 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Enum
 
+from passlib.context import CryptContext
+
 from app.config.database import Base
 from app.core import UserStatus, UserRole
 
 from uuid import UUID, uuid4
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class User(Base):
@@ -31,3 +35,9 @@ class User(Base):
         nullable=True,
         default=UserRole.USER,
     )
+
+    def set_password(self, plain_password: str) -> None:
+        self.password = pwd_context.hash(plain_password)
+
+    def verify_password(self, plain_password: str) -> bool:
+        return pwd_context.verify(plain_password, self.password)

@@ -12,3 +12,13 @@ class RegisterRequest(BaseModel):
 
 class RegisterResponse(BaseModel):
     verified: bool
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr = Field(...)
+    password: str = Field(...)
+
+
+class LoginResponse(BaseModel):
+    success: bool
+    message: str
