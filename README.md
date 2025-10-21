@@ -153,6 +153,8 @@ Once running, visit:
 - **Swagger UI**: http://localhost:8002/docs
 - **ReDoc**: http://localhost:8002/redoc
 
+**Note**: All API endpoints include comprehensive English summaries and descriptions in the OpenAPI documentation. Each endpoint clearly explains its purpose, required permissions, and expected behavior.
+
 ## 📝 Available Just Commands
 
 The `justfile` provides convenient shortcuts for common operations:
@@ -364,38 +366,3 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 - **HTTP-Only Cookies** - Tokens stored in secure HTTP-only cookies
 - **Role-Based Access** - Endpoint protection based on user roles
 - **Email Verification** - Required before account activation
-
-## 📈 Future Enhancements
-
-Areas for improvement with more development time:
-
-1. **Rate Limiting** - Add request throttling for auth endpoints
-2. **Password Reset** - Implement forgot password flow
-3. **2FA Support** - Add two-factor authentication option
-4. **Audit Logging** - Track user actions for compliance
-5. **Email Templates** - Rich HTML emails with branding
-6. **User Sessions** - Track active sessions and allow revocation
-7. **Soft Deletes** - Archive instead of hard delete users
-8. **Password Policies** - Enforce complexity requirements
-9. **Account Lockout** - Temporary lockout after failed login attempts
-10. **User Preferences** - Store user settings and preferences
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is part of a technical assessment and is provided as-is for evaluation purposes.
-
-## 📞 Support
-
-For questions or issues, please open an issue on the GitHub repository.
-
----
-
-**Note**: This is a demonstration project built for a technical assessment. It showcases production-ready patterns and best practices for building scalable FastAPI applications.

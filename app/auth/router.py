@@ -20,7 +20,12 @@ from app.config import get_db, create_refresh_token, create_access_token
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/signup", response_model=RegisterResponse)
+@router.post(
+    "/signup",
+    response_model=RegisterResponse,
+    summary="Register a new user",
+    description="Create a new user account with email and password. After registration, a verification code will be sent to the provided email address. The user will have PENDING status until email verification is completed.",
+)
 async def register(
     request: RegisterRequest, db: AsyncSession = Depends(get_db)
 ) -> bool:
@@ -45,7 +50,12 @@ async def register(
         )
 
 
-@router.post("/verify", response_model=RegisterResponse)
+@router.post(
+    "/verify",
+    response_model=RegisterResponse,
+    summary="Verify email address",
+    description="Verify user's email address using the verification code sent during registration. Upon successful verification, the user status changes to VERIFIED and authentication tokens are issued.",
+)
 async def verify(
     request: VerifyRequest, response: Response, db: AsyncSession = Depends(get_db)
 ):
@@ -68,7 +78,12 @@ async def verify(
     return RegisterResponse(verified=True, message="Email verified successfully")
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    summary="User login",
+    description="Authenticate user with email and password credentials. Returns access and refresh tokens stored in HTTP-only cookies. User must have VERIFIED status to successfully login.",
+)
 async def login(
     request: LoginRequest, response: Response, db: AsyncSession = Depends(get_db)
 ):
@@ -95,7 +110,11 @@ async def login(
     return LoginResponse(success=True, message="login successful")
 
 
-@router.post("/refresh")
+@router.post(
+    "/refresh",
+    summary="Refresh access token",
+    description="Generate a new access token using the refresh token stored in cookies. This endpoint allows users to maintain their session without re-authenticating.",
+)
 async def refresh(
     response: Response, request: Request, result: dict = Depends(refresh_access_token)
 ):
