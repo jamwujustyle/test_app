@@ -352,14 +352,13 @@ The application uses the following containerized services:
 
 ```python
 - id: UUID (Primary Key)
-- email: String (Unique, Indexed)
+- email: String (Unique)
 - password: String (Hashed)
 - name: String (Optional)
 - surname: String (Optional)
 - role: Enum (USER, ADMIN)
 - status: Enum (PENDING, VERIFIED)
 - created_at: DateTime
-- updated_at: DateTime
 ```
 
 ## 🔧 Configuration
@@ -389,7 +388,7 @@ CELERY_RESULT_BACKEND=redis://redis:6379/0
 ## 🛡️ Security Features
 
 - **Password Hashing** - Passwords are hashed using bcrypt
-- **JWT Tokens** - Short-lived access tokens (30 minutes) + long-lived refresh tokens (7 days)
+- **JWT Tokens** - Short-lived access tokens (30 minutes) + long-lived refresh tokens (7 days) (Multiplied for convenience)
 - **HTTP-Only Cookies** - Tokens stored in secure HTTP-only cookies
 - **Role-Based Access** - Endpoint protection based on user roles
 - **Email Verification** - Required before account activation
