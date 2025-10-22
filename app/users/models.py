@@ -1,6 +1,7 @@
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Enum
+from sqlalchemy import String, Enum, DateTime
+from sqlalchemy.sql import func
 
 from passlib.context import CryptContext
 
@@ -39,6 +40,10 @@ class User(Base):
     # NOTE: I would've had these fields in a separate table in a larger application
     verification_code: Mapped[str] = mapped_column(String(6), nullable=True)
     verification_code_expires: Mapped[datetime] = mapped_column(nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
 
     def generate_verification_code(self) -> str:
         import random

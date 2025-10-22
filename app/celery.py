@@ -15,9 +15,11 @@ celery.autodiscover_tasks(["app.tasks"])
 
 # Configure Celery Beat schedule
 celery.conf.beat_schedule = {
-    "delete-unverified-users-every-2-days": {
+    "delete-unverified-users-daily-at-midnight": {
         "task": "delete_unverified_users",
-        "schedule": 172800.0,  # 2 days in seconds (2 * 24 * 60 * 60)
+        "schedule": crontab(
+            hour=0, minute=0
+        ),  # run every day at midnight delete unverified users for 2+ days
     },
 }
 

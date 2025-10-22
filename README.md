@@ -94,7 +94,7 @@ Just is a command runner that simplifies common development tasks.
 **Linux:**
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+sudo snap install just --classic
 ```
 
 **macOS:**
@@ -274,25 +274,52 @@ tests/
 
 ### Cleanup Task
 
-The application includes an automated Celery task that runs every 2 days to clean up unverified user accounts.
+The application includes an automated Celery task that runs daily at midnight to clean up unverified user accounts.
 
 **Configuration:**
 
 - **Task Name**: `delete_unverified_users`
-- **Schedule**: Every 172,800 seconds (2 days)
-- **Function**: Deletes all users with status `PENDING`
+- **Schedule**: Daily at 00:00 UTC (using crontab)
+- **Function**: Deletes users with status `PENDING` who have been in that status for 2+ days
 
 **Implementation Details:**
 
 ```python
 # Located in: app/celery.py
 celery.conf.beat_schedule = {
-    "delete-unverified-users-every-2-days": {
+    "delete-unverified-users-daily-at-midnight": {
         "task": "delete_unverified_users",
-        "schedule": 172800.0,  # 2 days
+        "schedule": crontab(hour=0, minute=0),  # Run daily at midnight
     },
 }
 ```
+
+**⚠️ Implementation Note:**
+
+The original task description specified: _"Users who have not been verified within 2 days should be automatically deleted."_
+
+To implement this correctly, I added a `created_at` timestamp field to the User model. This field was not explicitly mentioned in the original requirements but was necessary to:
+
+1. **Track user age**: Determine which users have been in PENDING status for 2+ days
+2. **Precise deletion**: Only delete users created 2+ days ago, not all unverified users on every run
+3. **Prevent premature deletion**: Avoid deleting newly registered users who are still within their 2-day verification window
+
+**Why this change was necessary:**
+
+Without the `created_at` field, the cleanup task would have deleted ALL pending users every time it ran, including users who had just registered minutes ago. The `created_at` timestamp ensures that only users who have exceeded the 2-day grace period are removed.
+
+**Database Schema Addition:**
+
+```python
+# app/users/models.py
+created_at: Mapped[datetime] = mapped_column(
+    DateTime(timezone=True),
+    server_default=func.now(),
+    nullable=False
+)
+```
+
+This deviation improves the robustness and correctness of the cleanup mechanism while maintaining the spirit of the original requirement.
 
 ### Monitoring Celery Tasks
 
