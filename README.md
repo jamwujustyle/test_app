@@ -352,7 +352,7 @@ The application uses the following containerized services:
 
 ```python
 - id: UUID (Primary Key)
-- email: String (Unique)
+- email: String (Unique, Indexed)
 - password: String (Hashed)
 - name: String (Optional)
 - surname: String (Optional)

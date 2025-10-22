@@ -21,7 +21,9 @@ class User(Base):
         PG_UUID(as_uuid=True), primary_key=True, default=uuid4
     )
 
-    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(
+        String(255), nullable=False, unique=True, index=True
+    )
     password: Mapped[str] = mapped_column(String(255), nullable=False)
 
     name: Mapped[str] = mapped_column(String(100))
