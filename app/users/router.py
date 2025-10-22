@@ -96,6 +96,7 @@ async def delete_user(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    check_perm(current_user)
     return await AdminService(db).delete_user(user_id)
 
 
